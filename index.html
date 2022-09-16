@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>drawing app</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <script src="graphics.js"></script>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="500px" height="500px" style="background-color: black;"></canvas>
+  <p id="size">
+    50
+  </p>
+  <button style="width: 50px; height: 50px; background-color:red" id="red" onclick="changeColor('red')"></button>
+  <button style="width: 50px; height: 50px; background-color:blue" id="red" onclick="changeColor('blue')"></button>
+  <button style="width: 50px; height: 50px; background-color:green" id="red" onclick="changeColor('green')"></button>
+
+
+  <script>
+    class Shape{
+      constructor(x, y, r, c){
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.c = c;
+      }
+    }
+
+    //site elements
+    let canvas = document.getElementById("myCanvas");
+    let context = canvas.getContext('2d');
+    let size = document.getElementById("size");
+    let red = document.getElementById("red");
+
+    //
+    let x = 0; // cursor x coordinate
+    let y = 0; // cursor x coordinate
+    let radius = 50; // cursor radius
+    let color = "black"
+    let drawList = [];
+
+    setInterval(function(){
+      draw();
+    }, 1000/60)
+    canvas.addEventListener("mousemove", onMouseMove);
+    canvas.addEventListener("wheel", onWheel)
+    canvas.addEventListener("click", onClick)
+
+    function draw(){
+      drawRectangle(context, 0, 0, 500, 500, "whitesmoke")
+      drawArc(x, y, radius, color, 0, color)
+      for (let i = 0; i < drawList.length; i++) {
+        drawArc(drawList[i].x, drawList[i].y, drawList[i].r, drawList[i].c, 0, drawList[i].c)
+      }
+    }
+
+    function changeColor(chosenColor){
+      color = chosenColor;
+    }
+
+    function onClick(event){
+      drawList.push(new Shape(event.clientX, event.clientY, radius, color))
+    }
+
+    function onWheel(event){
+      let scrollAmount = ((event.deltaY * -1) / 20);
+      if(scrollAmount > 0 || radius > 5){
+        size.innerHTML = parseInt(size.innerHTML) + scrollAmount;
+        radius += scrollAmount
+      }
+    }
+
+    function onMouseMove(event){
+      x = event.x
+      y = event.y
+    }
+
+
+
+  </script>
+  
+  
+  
+  
+
+</body>
+
+</html>
